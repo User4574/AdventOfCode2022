@@ -1,0 +1,7 @@
+h1. Advent of Code 2022
+
+h2. Running
+
+bc. $ cd dayXX
+$ ruby part1.rb < input
+$ ruby part2.rb < input
