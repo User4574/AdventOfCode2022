@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+require 'nokogiri'
+
+sessionToken = File.read("sessionToken").strip
+
+now = Time.now
+year = now.year
+day = now.day
+
+print "Set up year #{year} day #{day} [/y.*/i]? "
+if gets.strip.downcase[0] != ?y
+  print "Year: "
+  year = gets.to_i
+  print "Day: "
+  day = gets.to_i
+end
+
+if File.directory?("day%02d" % day)
+  $stderr.puts "Day #{day} already set up"
+  exit 1
+end
+
+baseUrl = "https://adventofcode.com/#{year}/day/#{day}"
+
+dayPage = Nokogiri::HTML(URI.open(baseUrl, "Cookie" => "session=#{sessionToken}"))
+
+testData = dayPage.css('body > main > article.day-desc > pre > code')[0].content
+inputData = URI.open("#{baseUrl}/input", "Cookie" => "session=#{sessionToken}").read
+
+baseDir = "day%02d" % day
+Dir.mkdir(baseDir)
+
+File.open(File.join(baseDir, "test"), ?w) do |f|
+  f.print(testData)
+end
+File.open(File.join(baseDir, "input"), ?w) do |f|
+  f.print(inputData)
+end

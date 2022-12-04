@@ -1,5 +1,11 @@
 h1. Advent of Code 2022
 
+h2. newday
+
+p. Put your session cookie in @sessionToken@.
+
+p. Run @./newday@ to set up a new day.
+
 h2. Running
 
 bc. $ cd dayXX
