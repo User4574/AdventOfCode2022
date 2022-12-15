@@ -17,26 +17,27 @@ class Sensor
 
   def edge
     edges = []
-    at = [@x, @y - (@range + 1)]
-    until at[1] == @y
-      edges << at
-      at[0] += 1
-      at[1] += 1
+    atx = @x
+    aty = @y - (@range + 1)
+    until aty == @y
+      edges << [atx, aty]
+      atx += 1
+      aty += 1
     end
-    until at[0] == @x
-      edges << at
-      at[0] -= 1
-      at[1] += 1
+    until atx == @x
+      edges << [atx, aty]
+      atx -= 1
+      aty += 1
     end
-    until at[1] == @y
-      edges << at
-      at[0] -= 1
-      at[1] -= 1
+    until aty == @y
+      edges << [atx, aty]
+      atx -= 1
+      aty -= 1
     end
-    until at[0] == @x
-      edges << at
-      at[0] += 1
-      at[1] -= 1
+    until atx == @x
+      edges << [atx, aty]
+      atx += 1
+      aty -= 1
     end
     edges
   end
