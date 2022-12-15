@@ -1,4 +1,4 @@
-solids = []
+solids = Hash.new { |h, k| h[k] = Array.new }
 
 $stdin.readlines.map { |line|
   line.strip.split(' -> ').map {
@@ -15,7 +15,7 @@ $stdin.readlines.map { |line|
         y2 = y1
         y1 = t
       end
-      (y1..y2).each { |y| solids << [x, y] }
+      (y1..y2).each { |y| solids[y] << x }
     else
       x1 = path[i][0]
       x2 = path[i+1][0]
@@ -25,41 +25,42 @@ $stdin.readlines.map { |line|
         x1 = t
       end
       y = path[i][1]
-      (x1..x2).each { |x| solids << [x, y] }
+      (x1..x2).each { |x| solids[y] << x }
     end
   }
 }
 
-solids.uniq!
+solids.keys.each { |k| solids[k].uniq!  }
 
-floor = solids.map{ |_, y| y }.max + 1
+floor = solids.keys.flatten.max + 1
 
 sands = 0
 loop do
-  puts sands
-  sand = [500, 0]
+  sandx = 500
+  sandy = 0
+
   loop do
-    if sand[1] == floor
-      break
-    else
-      if solids.include?([sand[0], sand[1] + 1])
-        if solids.include?([sand[0] - 1, sand[1] + 1])
-          if solids.include?([sand[0] + 1, sand[1] + 1])
-            break
-          else
-            sand = [sand[0] + 1, sand[1] + 1]
-          end
+    break if sandy == floor
+
+    r = solids[sandy + 1]
+    if r.include?(sandx)
+      if r.include?(sandx - 1)
+        if r.include?(sandx + 1)
+          break
         else
-          sand = [sand[0] - 1, sand[1] + 1]
+          sandx += 1
         end
       else
-        sand = [sand[0], sand[1] + 1]
+        sandx -= 1
       end
     end
+    sandy += 1
   end
-  solids << sand
+
+  solids[sandy] << sandx
   sands += 1
-  break if sand == [500, 0]
+
+  break if sandx == 500 && sandy == 0
 end
 
 puts sands
